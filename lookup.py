@@ -3,19 +3,26 @@ from helper.WriteAJson import writeAJson
 from dataset.pessoa_dataset import dataset as pessoa_dataset
 from dataset.carro_dataset import dataset as carro_dataset
 
-pessoas = Database(
-    database="database",
-    collection="pessoas",
-    dataset=pessoa_dataset
-)
-pessoas.resetDatabase()
+def get_lookup():
+    pessoas = Database(
+        database="database",
+        collection="pessoas",
+        dataset=pessoa_dataset
+    )
+    pessoas.resetDatabase()
 
-carros = Database(
-    database="database",
-    collection="carros",
-    dataset=carro_dataset
-)
-carros.resetDatabase()
+    carros = Database(
+        database="database",
+        collection="carros",
+        dataset=carro_dataset
+    )
+    carros.resetDatabase()
+
+    return pessoas, carros
+
+
+pessoas, carros = get_lookup()
+
 
 result1 = carros.collection.aggregate([
     {"$lookup":
@@ -28,5 +35,4 @@ result1 = carros.collection.aggregate([
      }
 ])
 
-writeAJson(result1, "result1")
-
+writeAJson(result1, "resultlook")
