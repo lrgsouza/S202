@@ -3,7 +3,7 @@ import pymongo
 
 class Database:
     def __init__(self, database, collection, dataset=None):
-        connectionString = "mongodb+srv://root:root@cluster0.wwahw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+        connectionString = "localhost:27017"
         self.clusterConnection = pymongo.MongoClient(
             connectionString,
             # CASO OCORRA O ERRO [SSL_INVALID_CERTIFICATE]
@@ -18,20 +18,23 @@ class Database:
         self.db.drop_collection(self.collection)
         self.collection.insert_many(self.dataset)
 
-    def create(self, nome, idade):
-        return self.collection.insert_one({"nome": nome, "idade": idade})
+    def create(self, id, titulo, autor, ano, preco):
+        return self.collection.insert_one({"_id": id, "titulo": titulo,"autor":autor, "ano": ano,"preco": preco})
 
     def read(self):
         return self.collection.find({})
 
-    def update(self, nome, idade):
+    def readOne(self,id):
+        return self.collection.find({"_id":id})
+
+    def update(self, id, preco):
         return self.collection.update_one(
-            {"nome": nome},
+            {"_id": id},
             {
-                "$set": {"idade": idade},
+                "$set": {"preco": preco},
                 "$currentDate": {"lastModified": True}
             }
         )
 
-    def delete(self, nome):
-        return self.collection.delete_one({"nome": nome})
+    def delete(self, id):
+        return self.collection.delete_one({"_id": id})
